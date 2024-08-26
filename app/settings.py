@@ -40,6 +40,10 @@ INSTALLED_APPS = [
     'scraping',
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://chamados-scraper.onrender.com',
+]
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

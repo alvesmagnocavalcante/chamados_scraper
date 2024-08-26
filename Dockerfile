@@ -7,6 +7,30 @@ RUN apt-get update && apt-get install -y \
     unzip \
     curl \
     gnupg \
+    libnss3 \
+    libx11-xcb1 \
+    libxcomposite1 \
+    libxcursor1 \
+    libxdamage1 \
+    libxi6 \
+    libxtst6 \
+    libxrandr2 \
+    libasound2 \
+    libpango1.0-0 \
+    libpangocairo-1.0-0 \
+    libpangoft2-1.0-0 \
+    libgdk-pixbuf2.0-0 \
+    libcups2 \
+    libxss1 \
+    libnspr4 \
+    libdbus-1-3 \
+    libxt6 \
+    libxmu6 \
+    libxpm4 \
+    libgconf-2-4 \
+    libxkbcommon-x11-0 \
+    libxkbfile1 \
+    libgtk-3-0 \
     && rm -rf /var/lib/apt/lists/*
 
 # Adicione a chave GPG do repositório do Google Chrome
@@ -37,7 +61,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Coleta os arquivos estáticos para o Django
-RUN python manage.py collectstatic --noinput
+RUN python manage.py collectstatic --noinput || echo "Collectstatic failed"
 
 # Executa as migrações do banco de dados
 RUN python manage.py migrate

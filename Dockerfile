@@ -14,25 +14,30 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Adicione o repositório do Google Chrome
+# Adicione a chave do repositório e instale o Google Chrome na versão desejada
 RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
     && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list' \
     && apt-get update \
-    && apt-get install -y google-chrome-stable
+    && apt-get install -y google-chrome-stable=114.0.5735.90-1
 
-# Baixe e instale a versão mais recente do ChromeDriver
-RUN LATEST_VERSION=$(wget -q -O - https://chromedriver.storage.googleapis.com/LATEST_RELEASE) \
-    && wget https://chromedriver.storage.googleapis.com/$LATEST_VERSION/chromedriver_linux64.zip \
+# Baixe e instale o ChromeDriver correspondente
+RUN wget https://chromedriver.storage.googleapis.com/114.0.5735.90/chromedriver_linux64.zip \
     && unzip chromedriver_linux64.zip \
     && mv chromedriver /usr/local/bin/ \
     && chmod +x /usr/local/bin/chromedriver \
     && rm chromedriver_linux64.zip
 
+# Crie e ative um ambiente virtual
+RUN python -m venv /venv
+
 # Copie os arquivos do projeto para o contêiner
 COPY . .
 
-# Instale as dependências do Python
-RUN pip install --no-cache-dir -r requirements.txt
+# Ative o ambiente virtual e instale as dependências do Python
+RUN /venv/bin/pip install --no-cache-dir -r requirements.txt
+
+# Defina o PATH para incluir o diretório do ambiente virtual
+ENV PATH="/venv/bin:$PATH"
 
 # Exponha a porta do Django
 EXPOSE 8000

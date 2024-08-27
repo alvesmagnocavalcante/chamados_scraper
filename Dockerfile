@@ -1,5 +1,13 @@
-# Use uma imagem base que já inclui Chrome e ChromeDriver
-FROM selenium/standalone-chrome:latest
+# Use uma imagem base que inclui Python
+FROM python:3.9-slim
+
+# Instale dependências do Chrome e ChromeDriver
+RUN apt-get update && apt-get install -y wget unzip curl \
+    && CHROMEDRIVER_VERSION=$(curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE_128) \
+    && wget -O /tmp/chromedriver.zip "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip" \
+    && unzip /tmp/chromedriver.zip -d /usr/local/bin/ \
+    && rm /tmp/chromedriver.zip \
+    && apt-get install -y chromium
 
 # Defina o diretório de trabalho
 WORKDIR /app
@@ -9,9 +17,6 @@ COPY . .
 
 # Instale as dependências do Python
 RUN pip install -r requirements.txt
-
-# Defina as variáveis de ambiente, se necessário
-# ENV DJANGO_SETTINGS_MODULE=myproject.settings
 
 # Comando para aplicar migrações e iniciar o servidor Django
 CMD ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]

@@ -6,17 +6,16 @@ WORKDIR /app
 
 # Instale as dependências do sistema e o Google Chrome
 RUN apt-get update && apt-get install -y \
-    build-essential \
-    libpq-dev \
     wget \
     gnupg \
+    ca-certificates \
     unzip \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Adicione a chave do repositório e instale o Google Chrome na versão desejada
-RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
-    && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list' \
+# Adicione a chave do repositório do Google e o repositório do Google Chrome
+RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/google-archive-keyring.gpg \
+    && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-archive-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" | tee /etc/apt/sources.list.d/google-chrome.list \
     && apt-get update \
     && apt-get install -y google-chrome-stable=114.0.5735.90-1
 

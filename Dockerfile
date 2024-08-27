@@ -67,4 +67,4 @@ RUN python manage.py collectstatic --noinput || echo "Collectstatic failed"
 RUN python manage.py migrate
 
 # Comando para iniciar o servidor Django
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "scraping.wsgi:application"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "app.wsgi:application"]

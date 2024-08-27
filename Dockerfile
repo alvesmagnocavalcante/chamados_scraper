@@ -6,7 +6,7 @@ WORKDIR /app
 
 # Instale dependências necessárias e Google Chrome
 RUN apt-get update \
-    && apt-get install -y wget gnupg \
+    && apt-get install -y wget gnupg unzip \
     && wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/google-archive-keyring.gpg \
     && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-archive-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" | tee /etc/apt/sources.list.d/google-chrome.list \
     && apt-get update \
@@ -42,4 +42,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 ENV PATH="/usr/local/bin/chromedriver:${PATH}"
 
 # Comando para aplicar migrações e iniciar o servidor Django
-CMD ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
+CMD ["sh", "-c", "python manage.py migrate && python manage.py runserver

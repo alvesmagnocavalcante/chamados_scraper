@@ -4,7 +4,7 @@ FROM python:3.10-slim
 # Defina o diretório de trabalho
 WORKDIR /app
 
-# Instale as dependências do sistema e o Chrome
+# Instale as dependências do sistema e o Google Chrome
 RUN apt-get update && apt-get install -y \
     build-essential \
     libpq-dev \
@@ -19,11 +19,12 @@ RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add
     && apt-get update \
     && apt-get install -y google-chrome-stable
 
-# Baixe e instale o ChromeDriver
+# Baixe e instale o ChromeDriver 114.0.5735.90
 RUN wget https://chromedriver.storage.googleapis.com/114.0.5735.90/chromedriver_linux64.zip \
     && unzip chromedriver_linux64.zip \
     && mv chromedriver /usr/local/bin/ \
-    && chmod +x /usr/local/bin/chromedriver
+    && chmod +x /usr/local/bin/chromedriver \
+    && rm chromedriver_linux64.zip
 
 # Copie os arquivos do projeto para o contêiner
 COPY . .
